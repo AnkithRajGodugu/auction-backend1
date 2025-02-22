@@ -1,0 +1,55 @@
+.form-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 138px;
+    margin-right: 50%;
+    margin-left: 38%;
+    width: 300px;
+    background-color: #fff;
+    border-radius: 26px;
+
+}
+.title{
+    font-size: 26px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    margin-left: 45px;
+}
+.Name{
+    border-radius: 6px;
+    width: 200px;
+    height: 35px;
+    margin-left: 18%;
+    margin-bottom: 15px;
+}
+.Description{
+    border-radius: 6px;
+    width: 200px;
+    height: 35px;
+    margin-left: 18%;
+    margin-bottom: 15px;
+
+}
+.number{
+    border-radius: 6px;
+    width: 200px;
+    height: 35px;
+    margin-left: 18%;
+    margin-bottom: 15px;
+}
+.date{
+    border-radius: 6px;
+    width: 200px;
+    height: 35px;
+    margin-left: 18%;
+    margin-bottom: 15px;
+}
+.button{
+    border-radius: 6px;
+
+    width: 100px;
+    height: 25px;
+    margin-left: 34%;
+    margin-bottom: 25px;
+}

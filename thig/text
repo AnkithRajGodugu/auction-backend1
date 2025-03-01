@@ -1,0 +1,45 @@
+import signin from './components/signin'
+const App = () => {
+
+
+  const current_theme = localStorage.getItem('current_theme');
+  const [theme, setTheme] = useState(current_theme ? current_theme : 'light');
+
+  useEffect(()=>{
+    localStorage.setItem('current_theme', theme);
+
+  },[theme])
+  
+  return (
+    
+    
+   
+    <div>
+  
+    <div className={`container ${theme}`}>
+      <Navbar theme={theme} setTheme={setTheme}/>
+
+     
+    </div>
+
+
+
+
+    ////function AuctionItem() {
+ 
+ return (
+   <div>
+     <h2>item.itemName</h2>
+     <p>item.description</p>
+     <p>Current Bid: $item.currentBid</p>
+     <p>Highest Bidder: item.highestBidder || 'No bids yet'</p>
+     <input
+       type="number"
+       
+       placeholder="Enter your bid"
+     />
+     <button>Place Bid</button>
+     <p className="message">message</p>
+   </div>
+ );
+}</div>

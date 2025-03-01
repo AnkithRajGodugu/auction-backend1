@@ -10,7 +10,7 @@ import toogle_dark from '../Navbar/assets/day.png'
 import Home from './Home/Home';
 import PostAuction from './PostAuction/PostAuction';
 import LoginSignup from './LoginSignup/LoginSignup';
-import AuctionItem from './item/AuctionItem'
+import AuctionItem from './item/AuctionItem';
 
 const Navbar = ({theme, setTheme}) => {
 
@@ -27,7 +27,7 @@ const Navbar = ({theme, setTheme}) => {
           <NavLink to={'/' } className="home-link">Home</NavLink>
         </li>
         <li>
-          <NavLink to={'/Items'}className="home-link">Items</NavLink>
+          <NavLink to={'/AuctionItem'}className="home-link">Items</NavLink>
         </li>
         <li>
           <NavLink to={'/PostAuction'}className="home-link">Post Auction</NavLink>

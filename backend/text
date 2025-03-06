@@ -1,1 +1,56 @@
 mongodb+srv://auctionbase:Hello123@test1.a0kel.mongodb.net/?retryWrites=true&w=majority&appName=test1
+
+
+
+
+
+useEffect(() => {
+        fetchProducts();
+      }, []);
+    
+      const fetchProducts = async () => {
+        const response = await fetch("http://localhost:5000/api/products");
+        const data = await response.json();
+        setProducts(data);
+      };
+      const handleAddProduct = async (product) => {
+        const response = await fetch("http://localhost:5000/api/products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify(product),
+                });
+                const data = await response.json();
+                setProducts([...products, data]);
+                setProduct({});
+                setModalOpen(false);
+                };
+                const handleDeleteProduct = async (id) => {
+                    const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                        method: "DELETE",
+                        });
+                        const data = await response.json();
+                        setProducts(products.filter((product) => product._id !== id));
+                        };
+                        const handleEditProduct = async (product) => {
+                            setProduct(product);
+                            setModalOpen(true);
+                            };
+                            const handleUpdateProduct = async (product) => {
+                                const response = await fetch(`http://localhost:5000/api/products/${product._id}`,
+                                    {
+                                        method: "PUT",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify(product),
+                                            });
+                                            const data = await response.json();
+                                            setProducts(products.map((p) => (p._id === product._id ? product :
+                                                p)));
+                                                setProduct({});
+                                                setModalOpen(false);
+                                                };
+                                                return (
+                                                    <div className="App"></div>

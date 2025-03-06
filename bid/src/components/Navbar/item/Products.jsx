@@ -1,12 +1,23 @@
-
-
-
-
 //components/Products.js
 
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-function AuctionItem() {
+function Products() {
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('/api/products');
+                console.log(response.data); // Log the API response
+                setProducts(Array.isArray(response.data) ? response.data : []); // Ensure products is an array
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
+
     const defaultSellerInfo = {
         username: "User 123",
         contactNumber: "9898989898",
@@ -23,7 +34,7 @@ function AuctionItem() {
         image: null,
     };
 
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]); 
     const [newProduct, setNewProduct] = useState(defaultProduct);
     const [editProduct, setEditProduct] = useState(null);
     const [editName, setEditName] = useState("");
@@ -31,16 +42,6 @@ function AuctionItem() {
     const [editPrice, setEditPrice] = useState("");
     const [editStartingDate, setEditStartingDate] = useState("");
     const [editEndingDate, setEditEndingDate] = useState("");
-
-    useEffect(() => {
-        fetchProducts();
-      }, []);
-    
-      const fetchProducts = async () => {
-        const response = await fetch("http://localhost:5000/api/products");
-        const data = await response.json();
-        setProducts(data);
-      };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -72,9 +73,15 @@ function AuctionItem() {
         });
     };
 
-    const addProduct = () => {
-        setProducts([...products, newProduct]);
+const addProduct = async () => {
+    try {
+        const response = await axios.post('/api/products', newProduct);
+        setProducts([...products, response.data]);
         setNewProduct(defaultProduct);
+    } catch (error) {
+        console.error("Error adding product:", error);
+    }
+
     };
 
     const deleteProduct = (index) => {
@@ -187,7 +194,6 @@ function AuctionItem() {
                         <li
                             key={index}
                             style={{
-                               
                                 marginBottom: "20px",
                                 border: "1px solid #ccc",
                                 padding: "10px",
@@ -321,7 +327,4 @@ function AuctionItem() {
     );
 }
 
-
-
-
-export default AuctionItem;
+export default Products;

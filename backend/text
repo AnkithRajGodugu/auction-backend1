@@ -54,3 +54,62 @@ useEffect(() => {
                                                 };
                                                 return (
                                                     <div className="App"></div>
+
+
+                                                    .......
+                                                    const express = require('express');
+const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
+const Product = require('./models/Product');
+
+const app = express();
+const port = 5000;
+
+app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+
+mongoose.connect('mongodb://localhost:27017/product-page', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// Multer setup for image uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
+// Example route: Create a product
+app.post('/api/products', upload.single('image'), async (req, res) => {
+  try {
+    const { name, description, price, startingDate, endingDate, sellerInfo } = req.body;
+    const productData = {
+      name,
+      description,
+      price: parseFloat(price), // Convert string to number
+      startingDate,
+      endingDate,
+      sellerInfo: JSON.parse(sellerInfo), // Parse JSON string from frontend
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+    };
+    const product = new Product(productData);
+    await product.save();
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating product', error });
+  }
+});
+
+// Add other routes (GET, PUT, DELETE) as needed...
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});

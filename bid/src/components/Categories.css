@@ -1,7 +1,8 @@
-.categories-container {
+/* .categories-container {
     max-width: 800px;
     margin: auto;
     padding: 20px;
+    color: rgb(20, 91, 91);
   }
   
   .categories-list {
@@ -13,10 +14,10 @@
   .category-item {
     width: 48%;
     margin-bottom: 20px;
-    border: 1px solid #13af20;
+    border: 1px solid blanchedalmond;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(237, 50, 50, 0.1);
+    box-shadow: 5px 5px 5px rgb(77, 75, 75);
     transition: transform 0.3s ease-in-out;
   }
   
@@ -28,5 +29,117 @@
     width: 100%;
     height: 200px;
     object-fit: cover;
+  }
+   */
+   .categories-container {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    
+
+  }
+  
+  .categories-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    
+    color: rgb(62, 70, 16);
+  }
+  
+  .categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    color: rgb(20, 91, 91);
+    
+  }
+  
+  .category-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .category-image img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .category-details h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .category-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .category-seller-info, .category-auction-info {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .category-seller-info p, .category-auction-info p {
+    margin: 5px 0;
+  }
+  
+  button {
+    
+    color: rgb(20, 91, 91);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .button{
+    
+    color: rgb(20, 91, 91);
+}
+.dark .button{
+    
+    background-color: #222;
+
+}
+.light .button{
+    background-color: #fff;
+}
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  .bid-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #222;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .bid-modal input {
+    display: block;
+    margin: 10px 0;
+    padding: 5px;
+    width: 100px;
+    
+  }
+  
+  .bid-modal button {
+    margin-top: 10px;
   }
   

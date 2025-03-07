@@ -1,210 +1,125 @@
-//components/Categories.js
-
-import React, { useState } from "react";
-import "../../Categories.css"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../../Categories.css";
 
 function Categories() {
-    const [biddingItem, setBiddingItem] = useState(null);
-    const [bidAmount, setBidAmount] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [biddingItem, setBiddingItem] = useState(null);
+  const [bidAmount, setBidAmount] = useState(0);
+  const [error, setError] = useState(null);
 
-    const getUserByIndex = (index) => {
-        const users = [
-            {
-                username: "User1",
-                contactNumber: "123-456-7890",
-                email: "user1@example.com",
-            },
-            {
-                username: "User2",
-                contactNumber: "234-567-8901",
-                email: "user2@example.com",
-            },
-            {
-                username: "User3",
-                contactNumber: "345-678-9012",
-                email: "user3@example.com",
-            },
-            {
-                username: "User4",
-                contactNumber: "456-789-0123",
-                email: "user4@example.com",
-            },
-            {
-                username: "User5",
-                contactNumber: "567-890-1234",
-                email: "user5@example.com",
-            },
-        ];
-
-        return users[index];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/products");
+        console.log("Fetched products:", response.data);
+        setProducts(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setError("Failed to load categories. Please try again.");
+      }
     };
+    fetchProducts();
+  }, []);
 
-    const categoriesData = [
-        {
-            id: 1,
-            name: "Car",
-            description: "Explore the latest car models .",
-            imageUrl:
-                "https://media.geeksforgeeks.org/wp-content/uploads/20240122184958/images2.jpg",
-            sellerInfo: getUserByIndex(0),
-            auctionInfo: {
-                status: "Open",
-                timeRemaining: "5h 30m",
-                basePrice: 50,
-                currentPrice: 0,
-                currentBidder: null,
-            },
-        },
-        {
-            id: 2,
-            name: "Clothing",
-            description: "Stay in style with our fashionable clothing collection.",
-            imageUrl:
-                "https://media.geeksforgeeks.org/wp-content/uploads/20230407153938/gfg-hoodie.jpg",
-            sellerInfo: getUserByIndex(1),
-            auctionInfo: {
-                status: "Open",
-                timeRemaining: "3d 12h",
-                basePrice: 30,
-                currentPrice: 0,
-                currentBidder: null,
-            },
-        },
-        {
-            id: 3,
-            name: "Books",
-            description:
-                "Immerse yourself in the world of literature with our diverse book collection.",
-            imageUrl:
-        "https://media.geeksforgeeks.org/wp-content/uploads/20240110011929/glasses-1052010_640.jpg",
-            sellerInfo: getUserByIndex(2),
-            auctionInfo: {
-                status: "Open",
-                timeRemaining: "1w 1d",
-                basePrice: 20,
-                currentPrice: 0,
-                currentBidder: null,
-            },
-        },
-        {
-            id: 4,
-            name: "Honda second hand vehicle",
-            description: "Best working condition .",
-            imageUrl:
-                "https://media.geeksforgeeks.org/wp-content/uploads/20240122182422/images1.jpg",
-            sellerInfo: getUserByIndex(3),
-            auctionInfo: {
-                status: "Open",
-                timeRemaining: "2d 8h",
-                basePrice: 80,
-                currentPrice: 0,
-                currentBidder: null,
-            },
-        },
-        {
-            id: 5,
-            name: "Sports wear",
-            description:
-                "Fuel your active lifestyle with our high-quality sports tshirt.",
-            imageUrl:
-                "https://media.geeksforgeeks.org/wp-content/uploads/20230407153931/gfg-tshirts.jpg",
-            sellerInfo: getUserByIndex(4),
-            auctionInfo: {
-                status: "Open",
-                timeRemaining: "6h 20m",
-                basePrice: 40,
-                currentPrice: 0,
-                currentBidder: null,
-            },
-        },
-    ];
+  // Define calculateTimeRemaining before using it
+  const calculateTimeRemaining = (start, end) => {
+    const now = new Date();
+    const endDate = new Date(end);
+    const diffMs = endDate - now;
+    if (diffMs <= 0) return "Ended";
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    return `${days}d ${hours}h`;
+  };
 
-    const handleBidClick = (item) => {
-        setBiddingItem(item);
-        setBidAmount(
-            item.auctionInfo.basePrice + Math.floor(Math.random() * 50) + 1
-        );
-    };
+  // Enrich products with auctionInfo
+  const enrichedProducts = products.map((product) => ({
+    ...product,
+    auctionInfo: product.auctionInfo || {
+      status: "Open",
+      timeRemaining: calculateTimeRemaining(product.startingDate, product.endingDate),
+      basePrice: parseFloat(product.price),
+      currentPrice: product.auctionInfo?.currentPrice || 0,
+      currentBidder: product.auctionInfo?.currentBidder || null,
+    },
+  }));
 
-    const handlePlaceBid = () => {
-        setBiddingItem((prevItem) => ({
-            ...prevItem,
+  const handleBidClick = (item) => {
+    setBiddingItem(item);
+    setBidAmount(parseFloat(item.price) + Math.floor(Math.random() * 50) + 1);
+  };
+
+  const handlePlaceBid = () => {
+    setProducts(products.map((product) =>
+      product._id === biddingItem._id
+        ? {
+            ...product,
             auctionInfo: {
-                ...prevItem.auctionInfo,
-                currentPrice: bidAmount,
-                currentBidder: "user123",
+              ...product.auctionInfo,
+              currentPrice: bidAmount,
+              currentBidder: "user123",
             },
-        }));
-    };
+          }
+        : product
+    ));
+    setBiddingItem(null);
+  };
 
-    return (
-        <div className="categories-container">
-            <h2>Categories</h2>
-            <div className="categories-list">
-                {categoriesData.map((category) => (
-                    <div key={category.id} className="category-item">
-                        <div className="category-image">
-                            <img src={category.imageUrl} alt={category.name} />
-                        </div>
-                        <div className="category-details">
-                            <h3>{category.name}</h3>
-                            <p className="category-description">{category.description}</p>
-                            <div className="category-seller-info">
-                                <p>
-                                    <strong>Seller Information:</strong>
-                                </p>
-                                <p>Username: {category.sellerInfo.username}</p>
-                                <p>Contact Number: {category.sellerInfo.contactNumber}</p>
-                                <p>Email: {category.sellerInfo.email}</p>
-                            </div>
-                            <div className="category-auction-info">
-                                <p>
-                                    <strong>Auction Information:</strong>
-                                </p>
-                                <p>Status: {category.auctionInfo.status}</p>
-                                <p>Time Remaining: {category.auctionInfo.timeRemaining}</p>
-                                {category.auctionInfo.status === "Open" && (
-                                    <>
-                                        <button onClick={() => handleBidClick(category)}>
-                                            Click to Bid
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                            {biddingItem && biddingItem.id === category.id && (
-                                <div className="bid-modal">
-                                    <h3>Bid Information</h3>
-                                    <p>
-                                        <strong>Item:</strong> {biddingItem.name}
-                                    </p>
-                                    <p>
-                                        <strong>Base Price:</strong> $
-                                        {biddingItem.auctionInfo.basePrice}
-                                    </p>
-                                    <p>
-                                        <strong>Current Price:</strong> $
-                                        {biddingItem.auctionInfo.currentPrice}
-                                    </p>
-                                    <p>
-                                        <strong>Current Bidder:</strong>{" "}
-                                        {biddingItem.auctionInfo.currentBidder || "None"}
-                                    </p>
-                                    <input
-                                        type="number"
-                                        value={bidAmount}
-                                        onChange={(e) => setBidAmount(e.target.value)}
-                                        min={biddingItem.auctionInfo.basePrice + 1}
-                                    />
-                                    <button onClick={handlePlaceBid}>Place Bid</button>
-                                    <button onClick={() => setBiddingItem(null)}>Close</button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
+  return (
+    <div className="categories-container">
+      <h2>Categories</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="categories-list">
+        {enrichedProducts.map((product) => (
+          <div key={product._id} className="category-item">
+            <div className="category-image">
+              {product.image ? (
+                <img
+                  src={`http://localhost:5000${product.image}`}
+                  alt={product.name}
+                />
+              ) : (
+                <p>No image available</p>
+              )}
             </div>
-        </div>
-    );
+            <div style={{ padding: "15px" }}>
+              <h3>{product.name}</h3>
+              <p>{product.description}</p>
+              <p><strong>Price:</strong> ${product.price}</p>
+              <p><strong>Starting Date:</strong> {product.startingDate}</p>
+              <p><strong>Ending Date:</strong> {product.endingDate}</p>
+              <div>
+                <p><strong>Seller Info:</strong></p>
+                <p>Username: {product.sellerInfo?.username || "N/A"}</p>
+                <p>Contact Number: {product.sellerInfo?.contactNumber || "N/A"}</p>
+                <p>Email: {product.sellerInfo?.email || "N/A"}</p>
+              </div>
+              <div>
+                <p><strong>Auction Status:</strong> {product.auctionInfo.status}</p>
+                <p><strong>Time Remaining:</strong> {product.auctionInfo.timeRemaining}</p>
+                {product.auctionInfo.status === "Open" && (
+                  <button onClick={() => handleBidClick(product)}>Bid Now</button>
+                )}
+              </div>
+              {biddingItem && biddingItem._id === product._id && (
+                <div>
+                  <input
+                    type="number"
+                    value={bidAmount}
+                    onChange={(e) => setBidAmount(parseFloat(e.target.value) || 0)}
+                    min={product.auctionInfo.basePrice + 1}
+                  />
+                  <button onClick={handlePlaceBid}>Place Bid</button>
+                  <button onClick={() => setBiddingItem(null)}>Cancel</button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default Categories;

@@ -35,7 +35,7 @@ const App = () => {
         <Navbar theme={theme} setTheme={setTheme} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<LoginSignup />} />
+          <Route path="/signup" element={<LoginSignup setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/products" element={<Products />} />
           <Route path="/Categories" element={<Categories />} />
         </Routes>

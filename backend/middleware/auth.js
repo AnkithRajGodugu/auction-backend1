@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  // Extract token from Authorization header
+  
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     console.warn("No or invalid Authorization header:", authHeader);
@@ -16,7 +16,7 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ error: "Token missing after 'Bearer' in Authorization header." });
   }
 
-  // Verify JWT_SECRET exists
+  
   const SECRET_KEY = process.env.JWT_SECRET;
   if (!SECRET_KEY) {
     console.error("JWT_SECRET is not defined in environment variables.");
@@ -24,11 +24,11 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    // Verify and decode token
+    
     const decoded = jwt.verify(token, SECRET_KEY);
-    console.log("Token decoded successfully:", decoded); // Debug: { id, email, iat, exp }
+    console.log("Token decoded successfully:", decoded); 
 
-    // Validate required fields in decoded payload
+    
     if (!decoded.id || !decoded.email) {
       console.warn("Decoded token missing required fields:", decoded);
       return res.status(401).json({ 
@@ -36,8 +36,8 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    // Attach decoded user data to request
-    req.user = { id: decoded.id, email: decoded.email }; // Explicitly set expected fields
+   
+    req.user = { id: decoded.id, email: decoded.email }; 
     next();
   } catch (err) {
     console.error("Token verification failed:", err.message, err.stack);

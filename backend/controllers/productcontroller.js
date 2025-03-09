@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 const Product = require("../models/product");
-const User = require("../models/user"); // Import User model (adjust path as needed)
+const User = require("../models/user"); 
 const Razorpay = require("razorpay");
 
-// Initialize Razorpay with environment variables
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Log Product model to verify import
+
 console.log("Product model:", Product);
 
-// Get all products (public)
+
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().populate("auctionInfo.currentBidder", "name"); // Populate bidder name

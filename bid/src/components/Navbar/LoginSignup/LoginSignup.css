@@ -108,7 +108,7 @@
     background: #eaeaea;
     color: #676767;
 }
-/* Container to center the spinner */
+
 .spinner-container {
     position: fixed;
     top: 0;
@@ -118,16 +118,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.3); /* Optional: semi-transparent overlay */
-    z-index: 1000; /* Ensure it’s on top */
-}
+    background: rgba(0, 0, 0, 0.3); 
+    z-index: 1000;
 
-/* Simple CSS spinner */
+
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #f3f3f3; /* Light gray */
-    border-top: 4px solid #3498db; /* Blue */
+    border: 4px solid #f3f3f3; 
+    border-top: 4px solid #3498db; 
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -138,37 +137,37 @@
 }
 @media (max-width: 768px) {
     .Lcontainer {
-        margin-right: 10%; /* Reduced from 50% */
-        margin-left: 10%; /* Reduced from 28% */
-        width: 80%; /* Flexible width */
-        padding: 15px; /* Added padding for breathing room */
+        margin-right: 10%; 
+        margin-left: 10%; 
+        width: 80%; 
+        padding: 15px; 
     }
 
     .text {
-        font-size: 24px; /* Slightly smaller */
+        font-size: 24px; 
     }
 
     .underline {
-        width: 60px; /* Adjusted */
+        width: 60px;
         height: 3px;
     }
 
     .input {
-        width: 90%; /* Responsive width */
+        width: 90%; 
         height: 50px;
     }
 
     .input img {
-        margin: 0 20px; /* Reduced margin */
+        margin: 0 20px; 
     }
 
     .input input {
-        width: 100%; /* Full width minus image */
-        font-size: 17px; /* Slightly smaller */
+        width: 100%;
+        font-size: 17px; 
     }
 
     .forgot-password {
-        padding-left: 20px; /* Adjusted for smaller screens */
+        padding-left: 20px; 
         font-size: 16px;
     }
 
@@ -178,7 +177,7 @@
     }
 
     .submit {
-        width: 180px; /* Slightly smaller */
+        width: 180px; 
         height: 50px;
         font-size: 17px;
     }
@@ -228,12 +227,12 @@
     .submit-container {
         gap: 15px;
         margin: 20px auto;
-        flex-direction: column; /* Stack buttons vertically */
+        flex-direction: column; 
     }
 
     .submit {
-        width: 100%; /* Full width */
-        max-width: 200px; /* Cap width */
+        width: 100%;
+        max-width: 200px; 
         height: 45px;
         font-size: 16px;
     }
@@ -241,6 +240,6 @@
     .spinner {
         width: 30px;
         height: 30px;
-        border-width: 3px; /* Slightly smaller spinner */
+        border-width: 3px; 
     }
 }

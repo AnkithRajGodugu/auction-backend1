@@ -132,8 +132,8 @@ ul li {
     display: flex;
     align-items: center;
     background-color: #242424;
-    padding: 10px 20px; /* Reduced padding for a tighter look */
-    border-radius: 50px; /* Slightly smaller radius for balance */
+    padding: 10px 20px; 
+    border-radius: 50px; 
     transition: background 0.5s ease;
 }
 
@@ -144,7 +144,7 @@ ul li {
     outline: 0;
     color: #fff;
     font-size: 18px;
-    width: 200px; /* Changed max-width to width for consistency */
+    width: 200px; 
     transition: color 0.5s ease;
 }
 
@@ -154,10 +154,10 @@ ul li {
 }
 
 .search-box img {
-    width: 25px; /* Slightly smaller for balance */
+    width: 25px; 
     height: 25px;
     cursor: pointer;
-    margin-left: 10px; /* Added spacing between input and icon */
+    margin-left: 10px; 
     transition: opacity 0.3s ease;
 }
 
@@ -165,7 +165,7 @@ ul li {
     opacity: 0.8;
 }
 
-/* Dark Theme */
+
 .dark .navbar {
     background: #000;
     color: #fff;
@@ -180,34 +180,34 @@ ul li {
 }
 
 .dark .search-box input::placeholder {
-    color: #555; /* Slightly lighter for readability */
+    color: #555;
 }
 
-/* Light Theme (optional explicit styling) */
+
 .light .navbar {
     background: #fff;
     color: #222;
 }
 
 .home-link {
-    color: #222; /* Default for light theme */
+    color: #222; 
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .dark .home-link {
-    color: #fff; /* Dark theme link color */
+    color: #fff; 
 }
 
 .home-link:hover {
-    color: #bc1010; /* Hover effect for both themes */
+    color: #bc1010;
 }
 
 .home-link.active {
-    color: #bc1010; /* Active state for NavLink */
+    color: #890a0a; 
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
@@ -241,7 +241,7 @@ ul li {
     }
 
     .search-box input {
-        width: 100%; /* Full width on small screens */
+        width: 100%; 
         font-size: 16px;
     }
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../../../components/LoginSignup.css";
+import "../LoginSignup/LoginSignup.css";
 import user_icon from "../assets/person.png";
 import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
@@ -10,7 +10,7 @@ const LoginSignup = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [contactNumber, setContactNumber] = useState(""); // New field
+  const [contactNumber, setContactNumber] = useState(""); 
   const [action, setAction] = useState("Sign Up");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

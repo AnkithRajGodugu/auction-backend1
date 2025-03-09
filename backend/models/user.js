@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   contactNumber: {
     type: String,
     trim: true,
-    default: null, // Optional field for seller/bidder contact
+    default: null, 
   },
   createdAt: {
     type: Date,
@@ -30,4 +30,4 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User; // Export directly as User, not as an object
+module.exports = User; 

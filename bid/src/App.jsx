@@ -4,10 +4,10 @@ import Navbar from './components/Navbar/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Navbar/Home/Home';
-import Categories from './components/Navbar/Categories/Categories.'; // Fixed typo in import
+import Categories from './components/Navbar/Categories/Categories.'; 
 import LoginSignup from './components/Navbar/LoginSignup/LoginSignup';
 import Products from './components/Navbar/item/Products';
-import SearchResults from './components/Navbar/item/SearchResults'; // New search results component (optional)
+import SearchResults from './components/Navbar/item/SearchResults';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token')); // Check token on mount

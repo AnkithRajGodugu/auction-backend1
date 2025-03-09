@@ -3,8 +3,8 @@ const { signup, login } = require("../controllers/authcontroller");
 
 const router = express.Router();
 
-// Public routes for authentication
-router.post("/signup", signup); // Register a new user
-router.post("/login", login);   // Login an existing user
+
+router.post("/signup", signup); 
+router.post("/login", login);   
 
 module.exports = router;

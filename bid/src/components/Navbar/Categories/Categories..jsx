@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import "../../Categories.css";
+import "../Categories/Categories.css";
 
 function Categories() {
   const [products, setProducts] = useState([]);
@@ -33,7 +33,7 @@ function Categories() {
       }
     };
     fetchProducts();
-  }, [searchQuery]); // Re-fetch or filter when searchQuery changes
+  }, [searchQuery]); 
 
   const calculateTimeRemaining = (start, end) => {
     const now = new Date();

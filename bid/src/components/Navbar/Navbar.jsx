@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
-import '../../components/Navbar.css';
+import '../../components/Navbar/Navbar.css';
 import logo_light from '../Navbar/assets/logo-black.png';
 import logo_dark from '../Navbar/assets/logo-white.png';
 import search_icon_light from '../Navbar/assets/search-w.png';
@@ -17,11 +17,11 @@ const Navbar = ({ theme, setTheme, isAuthenticated, setIsAuthenticated }) => {
     };
 
     const handleSearch = (e) => {
-        e.preventDefault(); // Prevent form submission from refreshing the page
+        e.preventDefault();
         if (searchQuery.trim()) {
             console.log("Searching for:", searchQuery);
             navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-            setSearchQuery(""); // Clear input after search
+            setSearchQuery(""); 
         }
     };
 
@@ -72,13 +72,13 @@ const Navbar = ({ theme, setTheme, isAuthenticated, setIsAuthenticated }) => {
                     placeholder='Search'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress} // Trigger search on Enter
+                    onKeyPress={handleKeyPress} 
                 />
                 <img
                     src={theme === 'light' ? search_icon_light : search_icon_dark}
                     alt="Search"
-                    onClick={handleSearch} // Trigger search on icon click
-                    style={{ cursor: "pointer" }} // Make icon clickable
+                    onClick={handleSearch} 
+                    style={{ cursor: "pointer" }} 
                 />
             </div>
             <img

@@ -16,7 +16,7 @@ function Products() {
   const [editProduct, setEditProduct] = useState(null);
   const [editData, setEditData] = useState({});
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null); // Added for feedback
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -27,7 +27,7 @@ function Products() {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/user-products", { // Adjusted endpoint
+        const response = await axios.get("http://localhost:5000/api/user-products", { 
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched products:", response.data);
@@ -145,7 +145,7 @@ function Products() {
         formData.append(key, JSON.stringify(editData[key]));
       } else if (key === "image" && editData[key]) {
         formData.append(key, editData[key]);
-      } else if (editData[key] !== undefined) { // Only append defined values
+      } else if (editData[key] !== undefined) { 
         formData.append(key, editData[key]);
       }
     }

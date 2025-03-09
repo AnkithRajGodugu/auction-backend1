@@ -171,7 +171,6 @@
     font-weight: 700;
 }
 
-/* Messages */
 .categories-container p {
     font-size: 1.1rem;
     margin: 10px 0;
@@ -179,14 +178,14 @@
     font-weight: 400;
 }
 
-/* Categories List */
+
 .categories-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-/* Category Item */
+
 .category-item {
     background: #fff;
     border: 1px solid #ccc;
@@ -201,7 +200,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Image Section */
+
 .category-image {
     width: 100%;
     height: 200px;
@@ -221,7 +220,7 @@
 }
 
 .category-item:hover .category-image img {
-    transform: scale(1.05); /* Subtle zoom effect on hover */
+    transform: scale(1.05); 
 }
 
 .category-image p {

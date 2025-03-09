@@ -1,16 +1,24 @@
-const mongoose = require("mongoose"); // Add mongoose for consistency
-const Product = require("../models/product"); // Fixed to match file name: product.js
+const mongoose = require("mongoose");
+const Product = require("../models/product");
+const User = require("../models/user"); // Import User model (adjust path as needed)
+const Razorpay = require("razorpay");
 
-// Verify Product is a constructor at module level
+// Initialize Razorpay with environment variables
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+// Log Product model to verify import
 console.log("Product model:", Product);
 
-// Get all products (public, optional)
+// Get all products (public)
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate("auctionInfo.currentBidder", "name"); // Populate bidder name
     res.json(products);
   } catch (error) {
-    console.error("Error in getAllProducts:", error);
+    console.error("Error in getAllProducts:", error.message, error.stack);
     res.status(500).json({ message: "Error fetching products", error: error.message });
   }
 };
@@ -18,10 +26,11 @@ const getAllProducts = async (req, res) => {
 // Get user's products
 const getUserProducts = async (req, res) => {
   try {
-    const products = await Product.find({ user: req.user.id });
+    if (!req.user?.id) return res.status(401).json({ message: "User not authenticated" });
+    const products = await Product.find({ user: req.user.id }).populate("auctionInfo.currentBidder", "name");
     res.json(products);
   } catch (error) {
-    console.error("Error in getUserProducts:", error);
+    console.error("Error in getUserProducts:", error.message, error.stack);
     res.status(500).json({ message: "Error fetching user products", error: error.message });
   }
 };
@@ -29,11 +38,11 @@ const getUserProducts = async (req, res) => {
 // Get a single product by ID
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate("auctionInfo.currentBidder", "name");
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.json(product);
   } catch (error) {
-    console.error("Error in getProductById:", error);
+    console.error("Error in getProductById:", error.message, error.stack);
     res.status(500).json({ message: "Error fetching product", error: error.message });
   }
 };
@@ -45,31 +54,20 @@ const createProduct = async (req, res) => {
     console.log("Uploaded file:", req.file);
     console.log("User from token:", req.user);
 
-    // Check authentication
-    if (!req.user || !req.user.id) {
-      console.log("Authentication failed: No user or user ID");
-      return res.status(401).json({ message: "Authentication required" });
-    }
+    if (!req.user?.id) return res.status(401).json({ message: "Authentication required" });
 
     const { name, description, price, startingDate, endingDate, sellerInfo } = req.body;
-
-    // Validate required fields
     const requiredFields = { name, description, price, startingDate, endingDate };
     for (const [key, value] of Object.entries(requiredFields)) {
-      if (!value) {
-        console.log(`Validation failed: ${key} is missing`);
-        return res.status(400).json({ message: `${key} is required` });
-      }
+      if (!value) return res.status(400).json({ message: `${key} is required` });
     }
 
-    // Parse and validate sellerInfo
     let parsedSellerInfo;
     try {
       parsedSellerInfo = sellerInfo ? JSON.parse(sellerInfo) : {};
       const sellerFields = ["username", "contactNumber", "email"];
       for (const field of sellerFields) {
         if (!parsedSellerInfo[field]) {
-          console.log(`Validation failed: sellerInfo.${field} is missing`);
           return res.status(400).json({ message: `sellerInfo.${field} is required` });
         }
       }
@@ -82,31 +80,20 @@ const createProduct = async (req, res) => {
       name,
       description,
       price: parseFloat(price) || 0,
-      startingDate,
-      endingDate,
+      startingDate: new Date(startingDate),
+      endingDate: new Date(endingDate),
       sellerInfo: parsedSellerInfo,
       image: req.file ? `/uploads/${req.file.filename}` : null,
-      auctionInfo: {
-        status: "Open",
-        currentPrice: 0,
-        currentBidder: null,
-      },
+      auctionInfo: { status: "Open", currentPrice: 0, currentBidder: null },
       user: req.user.id,
     };
 
-    console.log("Product data to save:", productData);
-
-    // Double-check Product constructor
-    if (typeof Product !== "function") {
-      throw new Error("Product is not a constructor function");
-    }
-
     const product = new Product(productData);
     await product.save();
-    console.log("Product saved successfully:", product);
+    console.log("Product created:", product);
     res.status(201).json(product);
   } catch (error) {
-    console.error("Error in createProduct:", error);
+    console.error("Error in createProduct:", error.message, error.stack);
     res.status(500).json({ message: "Error creating product", error: error.message });
   }
 };
@@ -118,27 +105,24 @@ const updateProduct = async (req, res) => {
     console.log("Uploaded file:", req.file);
 
     const { name, description, price, startingDate, endingDate, sellerInfo } = req.body;
-    const updatedData = {
-      name,
-      description,
-      price: parseFloat(price) || 0,
-      startingDate,
-      endingDate,
-      sellerInfo: sellerInfo ? JSON.parse(sellerInfo) : {},
-    };
-    if (req.file) {
-      updatedData.image = `/uploads/${req.file.filename}`;
-    }
+    const updatedData = {};
+    if (name) updatedData.name = name;
+    if (description) updatedData.description = description;
+    if (price) updatedData.price = parseFloat(price) || 0;
+    if (startingDate) updatedData.startingDate = new Date(startingDate);
+    if (endingDate) updatedData.endingDate = new Date(endingDate);
+    if (sellerInfo) updatedData.sellerInfo = JSON.parse(sellerInfo);
+    if (req.file) updatedData.image = `/uploads/${req.file.filename}`;
 
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id, user: req.user.id },
       updatedData,
       { new: true }
-    );
+    ).populate("auctionInfo.currentBidder", "name");
     if (!product) return res.status(404).json({ message: "Product not found or not yours" });
     res.json(product);
   } catch (error) {
-    console.error("Error in updateProduct:", error);
+    console.error("Error in updateProduct:", error.message, error.stack);
     res.status(500).json({ message: "Error updating product", error: error.message });
   }
 };
@@ -150,7 +134,7 @@ const deleteProduct = async (req, res) => {
     if (!product) return res.status(404).json({ message: "Product not found or not yours" });
     res.json({ message: "Product deleted" });
   } catch (error) {
-    console.error("Error in deleteProduct:", error);
+    console.error("Error in deleteProduct:", error.message, error.stack);
     res.status(500).json({ message: "Error deleting product", error: error.message });
   }
 };
@@ -161,9 +145,46 @@ const placeBid = async (req, res) => {
     const { bidAmount } = req.body;
     const productId = req.params.id;
 
+    if (!bidAmount || isNaN(bidAmount)) {
+      return res.status(400).json({ message: "Bid amount is required and must be a number" });
+    }
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (!product.auctionInfo) {
+      product.auctionInfo = { status: "Open", currentPrice: 0, currentBidder: null };
+    }
+
+    // Normalize dates if they’re strings in an unexpected format
+    if (typeof product.startingDate === "string") {
+      const parsedStart = new Date(product.startingDate);
+      if (isNaN(parsedStart.getTime())) {
+        const [day, month, year] = product.startingDate.split("/");
+        product.startingDate = new Date(`${year}-${month}-${day}`);
+      } else {
+        product.startingDate = parsedStart;
+      }
+      if (isNaN(product.startingDate.getTime())) {
+        return res.status(400).json({ message: "Invalid startingDate format" });
+      }
+    }
+    if (typeof product.endingDate === "string") {
+      const parsedEnd = new Date(product.endingDate);
+      if (isNaN(parsedEnd.getTime())) {
+        const [day, month, year] = product.endingDate.split("/");
+        product.endingDate = new Date(`${year}-${month}-${day}`);
+      } else {
+        product.endingDate = parsedEnd;
+      }
+      if (isNaN(product.endingDate.getTime())) {
+        return res.status(400).json({ message: "Invalid endingDate format" });
+      }
     }
 
     const now = new Date();
@@ -174,20 +195,85 @@ const placeBid = async (req, res) => {
       return res.status(400).json({ message: "Auction has ended" });
     }
 
-    const basePrice = product.price;
+    const basePrice = product.price || 0;
     const currentPrice = product.auctionInfo.currentPrice || basePrice;
-    if (bidAmount <= currentPrice) {
-      return res.status(400).json({ message: "Bid must be higher than current price" });
+
+    // Check if bid is less than base price
+    if (Number(bidAmount) < basePrice) {
+      return res.status(400).json({ message: `Bid must be at least $${basePrice.toFixed(2)} (base price)` });
+    }
+    // Check if bid is less than or equal to current price
+    if (Number(bidAmount) <= currentPrice) {
+      return res.status(400).json({ message: `Bid must be higher than current price ($${currentPrice.toFixed(2)})` });
     }
 
-    product.auctionInfo.currentPrice = bidAmount;
+    product.auctionInfo.currentPrice = Number(bidAmount);
     product.auctionInfo.currentBidder = req.user.id;
     await product.save();
 
-    res.json(product);
+    // Populate the currentBidder field with the user's name after saving
+    const updatedProduct = await Product.findById(productId).populate("auctionInfo.currentBidder", "name");
+
+    console.log(`Bid placed on ${productId} by ${req.user.id}: ${bidAmount}`);
+    res.json(updatedProduct);
   } catch (error) {
-    console.error("Error in placeBid:", error);
+    console.error("Error in placeBid:", error.message, error.stack);
     res.status(500).json({ message: "Error placing bid", error: error.message });
+  }
+};
+
+// Create Razorpay order
+const createOrder = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    if (!amount || isNaN(amount)) {
+      return res.status(400).json({ message: "Amount is required and must be a number" });
+    }
+
+    const options = {
+      amount: Math.round(amount * 100), // Convert to paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    };
+
+    const order = await razorpay.orders.create(options);
+    console.log("Razorpay order created:", order);
+    res.json({ orderId: order.id });
+  } catch (error) {
+    console.error("Error in createOrder:", error.message, error.stack);
+    res.status(500).json({ message: "Error creating payment order", error: error.message });
+  }
+};
+
+// Confirm payment
+const confirmPayment = async (req, res) => {
+  try {
+    const { productId, paymentId } = req.body;
+    if (!productId || !paymentId) {
+      return res.status(400).json({ message: "Product ID and Payment ID are required" });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (product.auctionInfo.currentBidder.toString() !== req.user.id) {
+      return res.status(403).json({ message: "You are not the winning bidder" });
+    }
+
+    product.auctionInfo.paymentId = paymentId;
+    product.auctionInfo.status = "Paid";
+    await product.save();
+
+    // Populate the currentBidder field with the user's name after saving
+    const updatedProduct = await Product.findById(productId).populate("auctionInfo.currentBidder", "name");
+
+    console.log(`Payment confirmed for ${productId}: ${paymentId}`);
+    res.json({ message: "Payment confirmed", product: updatedProduct });
+  } catch (error) {
+    console.error("Error in confirmPayment:", error.message, error.stack);
+    res.status(500).json({ message: "Error confirming payment", error: error.message });
   }
 };
 
@@ -199,4 +285,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   placeBid,
+  createOrder,
+  confirmPayment,
 };

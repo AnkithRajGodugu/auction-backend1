@@ -9,15 +9,24 @@ const sellerInfoSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  price: { type: Number, required: true },
-  startingDate: { type: String, required: true },
-  endingDate: { type: String, required: true },
+  price: { type: Number, required: true }, // Base price
+  startingDate: { type: Date, required: true }, // Date type
+  endingDate: { type: Date, required: true }, // Date type
   sellerInfo: { type: sellerInfoSchema, required: true },
   image: { type: String },
   auctionInfo: {
-    status: { type: String, default: "Open", enum: ["Open", "Closed"] },
+    status: {
+      type: String,
+      default: "Open",
+      enum: ["Open", "Closed", "Paid"], // Valid statuses
+    },
     currentPrice: { type: Number, default: 0 },
-    currentBidder: { type: String, default: null },
+    currentBidder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Matches the User model name
+      default: null,
+    },
+    paymentId: { type: String, default: null },
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 }, { timestamps: true });

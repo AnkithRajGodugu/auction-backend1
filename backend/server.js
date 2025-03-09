@@ -13,7 +13,7 @@ const Razorpay = require("razorpay");
 const app = express();
 
 // Load environment variables
-dotenv.config({ path: "./.env" }); // Adjusted to root of backend/
+dotenv.config({ path: "./.env" });
 const envConfig = dotenv.config();
 if (envConfig.error) {
     console.error("Error loading .env file:", envConfig.error);
@@ -34,21 +34,17 @@ if (!process.env.MONGO_URL) {
 // Middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json());
-app.use(cors({ origin: process.env.NODE_ENV === "production" ? "https://auction-vrv8-rose.vercel.app/" : "http://localhost:5173" }));
+app.use(cors({ origin: "*" })); // Adjust for production later
 
-// File Upload Setup (Temporary for Vercel - Note: Ephemeral on Vercel)
+// File Upload Setup (Temporary - Ephemeral on Vercel)
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
     console.log("Created uploads directory at:", uploadsDir);
 }
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}${path.extname(file.originalname)}`);
-    },
+    destination: (req, file, cb) => cb(null, uploadsDir),
+    filename: (req, file, cb) => cb(null, `${Date.now()}${path.extname(file.originalname)}`),
 });
 const upload = multer({ storage });
 app.use("/uploads", express.static(uploadsDir));
@@ -77,11 +73,10 @@ mongoose
         process.exit(1);
     });
 
-// Local Development Server (Skipped on Vercel)
+// Local Development Only
 if (process.env.NODE_ENV !== "production") {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-// Export for Vercel
 module.exports = app;

@@ -11,7 +11,7 @@ function SearchResults() {
     useEffect(() => {
         const fetchSearchResults = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_SITE}/api/products`);
+                const response = await axios.get("/api/products");
                 const allProducts = Array.isArray(response.data) ? response.data : [];
                 const filtered = allProducts.filter((product) =>
                     product.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -19,8 +19,7 @@ function SearchResults() {
                 );
                 setProducts(filtered);
             } catch (error) {
-                console.error("Error fetching search results:", error.response?.data || error.message);
-                setError("Failed to load search results.");
+                setError(error.response?.data?.message || "Failed to load search results.");
             }
         };
         if (query) fetchSearchResults();

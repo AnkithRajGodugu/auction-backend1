@@ -19,9 +19,8 @@ const Navbar = ({ theme, setTheme, isAuthenticated, setIsAuthenticated }) => {
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            console.log("Searching for:", searchQuery);
             navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-            setSearchQuery(""); 
+            setSearchQuery("");
         }
     };
 
@@ -54,7 +53,7 @@ const Navbar = ({ theme, setTheme, isAuthenticated, setIsAuthenticated }) => {
                                 localStorage.removeItem("token");
                                 localStorage.removeItem("user");
                                 setIsAuthenticated(false);
-                                navigate("/login");
+                                navigate("/signup");
                             }}
                         >
                             Logout
@@ -72,13 +71,13 @@ const Navbar = ({ theme, setTheme, isAuthenticated, setIsAuthenticated }) => {
                     placeholder='Search'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress} 
+                    onKeyPress={handleKeyPress}
                 />
                 <img
                     src={theme === 'light' ? search_icon_light : search_icon_dark}
                     alt="Search"
-                    onClick={handleSearch} 
-                    style={{ cursor: "pointer" }} 
+                    onClick={handleSearch}
+                    style={{ cursor: "pointer" }}
                 />
             </div>
             <img

@@ -34,7 +34,7 @@ if (!process.env.MONGO_URL) {
 // Middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json());
-app.use(cors({ origin: process.env.NODE_ENV === "production" ? "https://auction-platform-26j3hde14-ankithrajgodugus-projects.vercel.app" : "http://localhost:5173" }));
+app.use(cors({ origin: process.env.NODE_ENV === "production" ? "https://auction-vrv8-rose.vercel.app/" : "http://localhost:5173" }));
 
 // File Upload Setup (Temporary for Vercel - Note: Ephemeral on Vercel)
 const uploadsDir = path.join(__dirname, "uploads");

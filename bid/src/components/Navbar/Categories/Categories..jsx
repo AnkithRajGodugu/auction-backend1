@@ -17,7 +17,7 @@ function Categories() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(`${import.meta.env.VITE_APP_SITE}/api/products`);
         console.log("Fetched products:", response.data);
         let allProducts = Array.isArray(response.data) ? response.data : [];
         if (searchQuery) {
@@ -87,7 +87,7 @@ function Categories() {
     console.log("Placing bid:", { productId: biddingItem._id, bidAmount });
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/products/${biddingItem._id}/bid`,
+        `${import.meta.env.VITE_APP_SITE}/api/products/${biddingItem._id}/bid`,
         { bidAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -134,7 +134,7 @@ function Categories() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/create-order",
+        `${import.meta.env.VITE_APP_SITE}/api/create-order`,
         { amount: product.auctionInfo.currentPrice },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -155,7 +155,7 @@ function Categories() {
         handler: async (response) => {
           try {
             const confirmResponse = await axios.post(
-              `http://localhost:5000/api/products/${product._id}/confirm-payment`,
+              `${import.meta.env.VITE_APP_SITE}/api/products/${product._id}/confirm-payment`,
               { productId: product._id, paymentId: response.razorpay_payment_id },
               { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -199,7 +199,7 @@ function Categories() {
             <div key={product._id} className="category-item">
               <div className="category-image">
                 {product.image ? (
-                  <img src={`http://localhost:5000${product.image}`} alt={product.name} />
+                  <img src={`${import.meta.env.VITE_APP_SITE}${product.image}`} alt={product.name} />
                 ) : (
                   <p>No image available</p>
                 )}

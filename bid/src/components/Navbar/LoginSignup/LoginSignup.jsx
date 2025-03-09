@@ -19,7 +19,7 @@ const LoginSignup = ({ setIsAuthenticated }) => {
     const userData = action === "Sign Up" 
       ? { name, email, password, contactNumber } 
       : { email, password };
-    const url = action === "Sign Up" ? "http://localhost:5000/api/signup" : "http://localhost:5000/api/login";
+    const url = action === "Sign Up" ? `${import.meta.env.VITE_APP_SITE}/api/signup` : `${import.meta.env.VITE_APP_SITE}/api/login`;
 
     setLoading(true);
     try {
@@ -47,7 +47,7 @@ const LoginSignup = ({ setIsAuthenticated }) => {
 
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/protected", {
+      const response = await axios.get(`${import.meta.env.VITE_APP_SITE}/api/protected`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLoading(false);

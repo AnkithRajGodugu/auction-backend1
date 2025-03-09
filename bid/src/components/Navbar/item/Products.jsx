@@ -27,7 +27,7 @@ function Products() {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/user-products", { 
+        const response = await axios.get(`${import.meta.env.VITE_APP_SITE}/api/user-products`, { 
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched products:", response.data);
@@ -90,7 +90,7 @@ function Products() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/products", formData, {
+      const response = await axios.post(`${import.meta.env.VITE_APP_SITE}/api/products`, formData, {
         headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
       });
       setProducts([...products, response.data]);
@@ -119,7 +119,7 @@ function Products() {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:5000/api/products/${id}`, {
+      const response = await axios.delete(`${import.meta.env.VITE_APP_SITE}/api/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Delete response:", response.data);
@@ -151,7 +151,7 @@ function Products() {
     }
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
+      const response = await axios.put(`${import.meta.env.VITE_APP_SITE}/api/products/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
       });
       console.log("Update response:", response.data);
@@ -214,7 +214,7 @@ function Products() {
           {products.map((product) => (
             <li key={product._id} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px", boxShadow: "0 0 5px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-                {product.image && <img src={`http://localhost:5000${product.image}`} alt={product.name} style={{ marginRight: "15px", width: "100px", height: "auto", borderRadius: "5px" }} />}
+                {product.image && <img src={`${import.meta.env.VITE_APP_SITE}${product.image}`} alt={product.name} style={{ marginRight: "15px", width: "100px", height: "auto", borderRadius: "5px" }} />}
                 <div>
                   <strong className="inside">Name:</strong> {product.name}<br />
                   <strong className="inside">Description:</strong> {product.description}<br />

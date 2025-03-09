@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products'); // Fixed URL to full path
+        const response = await axios.get(`${import.meta.env.VITE_APP_SITE}/api/products`); // Fixed URL to full path
         console.log("Initial product fetch:", response.data);
         // Optionally store products in state if needed globally
       } catch (error) {

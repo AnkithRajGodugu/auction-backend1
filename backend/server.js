@@ -22,7 +22,7 @@ if (dotenv.error) {
 
 app.use(morgan("dev"));
 app.use(bodyParser.json()); 
-app.use(cors());
+app.use(cors(`https://auction-weld.vercel.app/`));
 app.use(express.static(path.join(__dirname, "../bid"))); 
 
 const PORT = process.env.PORT || 5000;

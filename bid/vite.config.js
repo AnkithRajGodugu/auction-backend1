@@ -9,12 +9,12 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'http://localhost:5000', // Change to your backend port
+                target: 'http://localhost:5000',
                 changeOrigin: true,
                 secure: false,
             },
             '/uploads': {
-                target: 'http://localhost:5000', // Match above
+                target: 'http://localhost:5000',
                 changeOrigin: true,
                 secure: false,
             },
